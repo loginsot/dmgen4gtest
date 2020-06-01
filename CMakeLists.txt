@@ -6,7 +6,7 @@ INCLUDE(cmake/ModuleImport.cmake)
 INCLUDE(cmake/ModuleCompileOptions.cmake)
 INCLUDE(cmake/ModuleMFCCompileOptions.cmake)
 ModuleSetCompileOptions()
-SetMFCCompileOptions()
+ModuleSetWinCompilerFlags()
 
 SET(DMGEN_VERSION_MAJOR "1")
 SET(DMGEN_VERSION_MINOR "0")
