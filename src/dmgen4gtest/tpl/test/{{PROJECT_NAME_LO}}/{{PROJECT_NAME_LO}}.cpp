@@ -25,7 +25,16 @@ protected:
 
 void {{PROJECT_NAME_LO}}_DeathTest()
 {
+    internal::Random oRand(time(0));
 
+    for (size_t i = 0; i < 10000; i++)
+    {
+        if (5000 == oRand.Generate(10000))
+        {
+            std::cerr << "DeathTest" << std::endl;
+            break;
+        }
+    }
 }
 
 TEST_F(frame_{{PROJECT_NAME_LO}}, init)
