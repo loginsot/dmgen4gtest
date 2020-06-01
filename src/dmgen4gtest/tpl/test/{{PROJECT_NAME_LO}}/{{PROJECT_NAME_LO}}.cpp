@@ -25,7 +25,7 @@ protected:
 
 void {{PROJECT_NAME_LO}}_DeathTest()
 {
-    internal::Random oRand(time(0));
+    testing::internal::Random oRand(time(0));
 
     for (size_t i = 0; i < 10000; i++)
     {
