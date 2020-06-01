@@ -1,14 +1,14 @@
 
 #include "gtest.h"
 
-class env_{{PROJECT_NAME}}
+class env_{{PROJECT_NAME_LO}}
 {
 public:
     void init(){}
     void uninit(){}
 };
 
-class frame_{{PROJECT_NAME}} : public testing::Test
+class frame_{{PROJECT_NAME_LO}} : public testing::Test
 {
 public:
     virtual void SetUp()
@@ -20,22 +20,22 @@ public:
         env.uninit();
     }
 protected:
-    env_{{PROJECT_NAME}} env;
+    env_{{PROJECT_NAME_LO}} env;
 };
 
-TEST_F(frame_{{PROJECT_NAME}}, init)
+TEST_F(frame_{{PROJECT_NAME_LO}}, init)
 {
     ASSERT_TRUE(1);
     ASSERT_EQ(1, 1);
     ASSERT_FALSE(0);
 }
 
-TEST_F(frame_{{PROJECT_NAME}}, create)
+TEST_F(frame_{{PROJECT_NAME_LO}}, create)
 {
 
 }
 
-TEST_F(frame_{{PROJECT_NAME}}, do_action)
+TEST_F(frame_{{PROJECT_NAME_LO}}, do_action)
 {
 
 }
