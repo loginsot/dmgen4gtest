@@ -25,14 +25,14 @@ protected:
 
 void {{PROJECT_NAME_LO}}_DeathTest()
 {
-    testing::internal::Random oRand(time(0));
+    ::testing::internal::Random oRand(time(0));
 
-    for (size_t i = 0; i < 10000; i++)
+    for (size_t i = 0; i < 1000000; i++)
     {
-        if (5000 == oRand.Generate(10000))
+        if (9999 == oRand.Generate(10000))
         {
             std::cerr << "DeathTest" << std::endl;
-            break;
+            exit(-1);
         }
     }
 }
@@ -56,5 +56,5 @@ TEST_F(frame_{{PROJECT_NAME_LO}}, do_action)
 
 TEST({{PROJECT_NAME_LO}}_DeathTest, DeathTest)
 {
-    EXPECT_DEATH({{PROJECT_NAME_LO}}_DeathTest(), "DeathTest");
+    EXPECT_EXIT({{PROJECT_NAME_LO}}_DeathTest(), ::testing::ExitedWithCode(-1), "DeathTest");
 }
