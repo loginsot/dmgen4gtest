@@ -23,6 +23,11 @@ protected:
     env_{{PROJECT_NAME_LO}} env;
 };
 
+void {{PROJECT_NAME_LO}}_DeathTest()
+{
+
+}
+
 TEST_F(frame_{{PROJECT_NAME_LO}}, init)
 {
     ASSERT_TRUE(1);
@@ -38,4 +43,9 @@ TEST_F(frame_{{PROJECT_NAME_LO}}, create)
 TEST_F(frame_{{PROJECT_NAME_LO}}, do_action)
 {
 
+}
+
+TEST({{PROJECT_NAME_LO}}_DeathTest, DeathTest)
+{
+    EXPECT_DEATH({{PROJECT_NAME_LO}}_DeathTest(), "DeathTest");
 }
