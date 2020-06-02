@@ -18,7 +18,7 @@ INC_DIR += -Isrc -Isrc/gtest -Itest/{{PROJECT_NAME_LO}} -Iinclude
 LIB_DIR = -L/lib/$(BUILD_CONFIG_NAME)
 LIBS += -Wl,-Bstatic
 
-DESTDIR = ./bin/$(BUILD_CONFIG_NAME)/
+DESTDIR = ../bin/$(BUILD_CONFIG_NAME)/
 
 DESTNAME = {{PROJECT_NAME_LO}}
 
