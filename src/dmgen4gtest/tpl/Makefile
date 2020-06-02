@@ -40,7 +40,6 @@ DEPS3 = $(patsubst %.o, %.d, $(OBJS3))
 
 $(foreach dir, $(SRC_DIR), $(eval OBJ_DIR += $(OUTPUT)/$(dir)))
 #$(shell touch Makefile)
-
 CPPFLAGS += -Wall -fcheck-new -fexceptions -fnon-call-exceptions
 LDFLAGS = $(LIB_DIR) $(LIBS)
 
