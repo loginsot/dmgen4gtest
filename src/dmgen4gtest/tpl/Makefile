@@ -38,7 +38,7 @@ SRCS3 = $(shell find $(SRC_DIR) -maxdepth 3 -name "*.cc")
 OBJS3 = $(patsubst %.cpp, $(OUTPUT)/%.o, $(SRCS3))
 DEPS3 = $(patsubst %.o, %.d, $(OBJS3))
 
-${foreach dir, $(SRC_DIR), $(eval OBJ_DIR += $(OUTPUT)/$(dir)))
+$(foreach dir, $(SRC_DIR), $(eval OBJ_DIR += $(OUTPUT)/$(dir)))
 #$(shell touch Makefile)
 
 CPPFLAGS += -Wall -fcheck-new -fexceptions -fnon-call-exceptions
