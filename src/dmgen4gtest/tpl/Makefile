@@ -54,7 +54,7 @@ $(shell mkdir -p $(sort $(OBJ_DIR)))
 $(DEST): $(OBJS) $(OBJS2) $(OBJS3)
     @echo
     @echo "\033[0;32;1mINC_DIR: $(INC_DIR)\033[0;33;1m"
-    @(CXX) -o $@ $< $(LDFLAGS)
+    @$(CXX) -o $@ $< $(LDFLAGS)
     @echo
     @echo "\033[0;31;1m--- make ok !!! $(DEST) ---\033[0;33;1m"
     @echo -e "\033[0m"
