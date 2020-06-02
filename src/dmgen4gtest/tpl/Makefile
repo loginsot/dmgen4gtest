@@ -54,6 +54,8 @@ $(shell mkdir -p $(sort $(OBJ_DIR)))
 $(DEST): $(OBJS) $(OBJS2) $(OBJS3)
     @echo
     @echo "\033[0;32;1mINC_DIR: $(INC_DIR)\033[0;33;1m"
+    @echo
+    @echo "\033[0;32;1m$(CXX) -o $@ $< $(LDFLAGS)\033[0;33;1m"
     @$(CXX) -o $@ $< $(LDFLAGS)
     @echo
     @echo "\033[0;31;1m--- make ok !!! $(DEST) ---\033[0;33;1m"
@@ -75,7 +77,7 @@ $(OUTPUT)/%.o: %.c
 
 $(OUTPUT)/%.d: %.c
     @set -e; rm -f $@; \
-    $(CC) -MM $(CPPFLAGS) $(INC_DIR) $< > $@.$$$$; \
+    $(CC) -MM $(CPPFLAGS) $(INC_DIR) $< > $@.$$$$;  \
     sed 's,.*\.o[ :]*,$(patsubst %.d,%,o,$@) $@ : ,g' < $@.$$$$ > $@; \
     rm -f $@.$$$$
 
@@ -84,8 +86,8 @@ $(OUTPUT)/%.o: %.cc
     @$(CC) -o $@ -c $< $(CPPFLAGS) $(INC_DIR)
 
 $(OUTPUT)/%.d: %.cc
-    @set -e; rm -f $@; \
-    $(CC) -MM $(CPPFLAGS) $(INC_DIR) $< > $@.$$$$; \
+    @set -e; rm -f $@;  \
+    $(CC) -MM $(CPPFLAGS) $(INC_DIR) $< > $@.$$$$;  \
     sed 's,.*\.o[ :]*,$(patsubst %.d,%,o,$@) $@ : ,g' < $@.$$$$ > $@; \
     rm -f $@.$$$$
 
