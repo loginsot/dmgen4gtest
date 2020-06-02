@@ -4,7 +4,6 @@ SET(DMPROJECT_NAME "dmgen4gtest")
 PROJECT(${DMPROJECT_NAME})
 INCLUDE(cmake/ModuleImport.cmake)
 INCLUDE(cmake/ModuleCompileOptions.cmake)
-INCLUDE(cmake/ModuleMFCCompileOptions.cmake)
 ModuleSetCompileOptions()
 ModuleSetWinCompilerFlags()
 
