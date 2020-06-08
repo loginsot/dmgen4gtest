@@ -16,7 +16,7 @@ INC_DIR := $(addprefix -I,$(SRC_DIR))
 SRC_DIR +=
 INC_DIR += -Isrc -Isrc/gtest -Itest/{{PROJECT_NAME_LO}} -Iinclude
 LIB_DIR = -L/lib/$(BUILD_CONFIG_NAME)
-LIBS += -Wl,-Bstatic
+LIBS += -Wl,-Bdynamic
 
 DESTDIR = ../bin/$(BUILD_CONFIG_NAME)/
 
@@ -42,7 +42,7 @@ $(foreach dir, $(SRC_DIR), $(eval OBJ_DIR += $(OUTPUT)/$(dir)))
 
 #$(shell touch Makefile)
 
-CPPFLAGS += -Wall -fcheck-new -fexceptions -fnon-call-exceptions -std=c++11
+CPPFLAGS += -Wall -fcheck-new -fexceptions -fnon-call-exceptions -std=c++11 -Wno-unknown-pragmas -fpermissive
 
 LDFLAGS = $(LIB_DIR) $(LIBS)
 
@@ -51,8 +51,8 @@ $(shell rm -rf build)
 $(shell mkdir -p $(DESTDIR))
  
 all: $(DEST)
-$(shell mkdir -p $(sort $(OBJ_DIR)))
--include $(DEPS) $(DEPS2) $(DEPS3)
+    $(shell mkdir -p $(sort $(OBJ_DIR)))
+    -include $(DEPS) $(DEPS2) $(DEPS3)
 
 $(DEST): $(OBJS) $(OBJS2) $(OBJS3)
     @echo
