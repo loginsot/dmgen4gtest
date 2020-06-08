@@ -99,7 +99,7 @@ $(OUTPUT)/%.d: %.cc
 
 clean:
 	@echo
-	@echo "\033[0;32;1mrm -rf $(OUTPUT) $(DEST)\033[0;33;1m]]
+	@echo "\033[0;32;1mrm -rf $(OUTPUT) $(DEST)\033[0;33;1m]]"
 	@rm -rf $(OUTPUT) $(DEST)
 	@echo "\033[0;31;1m--- clean $(DEST) ---\033[0;33;1m"
 	@echo -e "\033[0m"
