@@ -31,11 +31,11 @@ OBJS = $(patsubst %.cpp, $(OUTPUT)/%.o, $(SRCS))
 DEPS = $(patsubst %.o, %.d, $(OBJS))
 
 SRCS2 = $(shell find $(SRC_DIR) -maxdepth 3 -name "*.c")
-OBJS2 = $(patsubst %.cpp, $(OUTPUT)/%.o, $(SRCS2))
+OBJS2 = $(patsubst %.c, $(OUTPUT)/%.o, $(SRCS2))
 DEPS2 = $(patsubst %.o, %.d, $(OBJS2))
 
 SRCS3 = $(shell find $(SRC_DIR) -maxdepth 3 -name "*.cc")
-OBJS3 = $(patsubst %.cpp, $(OUTPUT)/%.o, $(SRCS3))
+OBJS3 = $(patsubst %.cc, $(OUTPUT)/%.o, $(SRCS3))
 DEPS3 = $(patsubst %.o, %.d, $(OBJS3))
 
 $(foreach dir, $(SRC_DIR), $(eval OBJ_DIR += $(OUTPUT)/$(dir)))
