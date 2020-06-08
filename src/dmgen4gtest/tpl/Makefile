@@ -86,11 +86,11 @@ $(OUTPUT)/%.d: %.c
 
 $(OUTPUT)/%.o: %.cc
 	@echo "\033[0;32;1m$(CC) $(CPPFLAGS) -c $< -o $@\033[0;33;1m"
-	@$(CC) -o $@ -c $< $(CPPFLAGS) $(INC_DIR)
+	@$(CXX) -o $@ -c $< $(CPPFLAGS) $(INC_DIR)
 
 $(OUTPUT)/%.d: %.cc
 	@set -e; rm -f $@;  \
-	$(CC) -MM $(CPPFLAGS) $(INC_DIR) $< > $@.$$$$;  \
+	$(CXX) -MM $(CPPFLAGS) $(INC_DIR) $< > $@.$$$$;  \
 	sed 's,.*\.o[ :]*,$(patsubst %.d,%,o,$@) $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
