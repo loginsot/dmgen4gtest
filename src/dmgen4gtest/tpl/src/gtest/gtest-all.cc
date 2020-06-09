@@ -36,7 +36,7 @@
 
 // This line ensures that gtest.h can be compiled on its own, even
 // when it's fused.
-#include <gtest/gtest.h>
+#include <gtest.h>
 
 // The following lines pull in the real gtest *.cc files.
 // Copyright 2005, Google Inc.
@@ -8044,39 +8044,184 @@ const int kStdErrFileno = 2;
 const int kStdOutFileno = STDOUT_FILENO;
 const int kStdErrFileno = STDERR_FILENO;
 #endif  // _MSC_VER
+#if GTEST_OS_LINUX
 
-#if GTEST_OS_MAC
+namespace {
+template <typename T>
+T ReadProcFileField(const std::string& filename, int field) {
+  std::string dummy;
+  std::ifstream file(filename.c_str());
+  while (field-- > 0) {
+    file >> dummy;
+  }
+  T output = 0;
+  file >> output;
+  return output;
+}
+}  // namespace
+
+// Returns the number of active threads, or 0 when there is an error.
+size_t GetThreadCount() {
+  const std::string filename =
+      (Message() << "/proc/" << getpid() << "/stat").GetString();
+  return ReadProcFileField<size_t>(filename, 19);
+}
+
+#elif GTEST_OS_MAC
+
+size_t GetThreadCount() {
+  const task_t task = mach_task_self();
+  mach_msg_type_number_t thread_count;
+  thread_act_array_t thread_list;
+  const kern_return_t status = task_threads(task, &thread_list, &thread_count);
+  if (status == KERN_SUCCESS) {
+    // task_threads allocates resources in thread_list and we need to free them
+    // to avoid leaks.
+    vm_deallocate(task,
+                  reinterpret_cast<vm_address_t>(thread_list),
+                  sizeof(thread_t) * thread_count);
+    return static_cast<size_t>(thread_count);
+  } else {
+    return 0;
+  }
+}
+
+#elif GTEST_OS_DRAGONFLY || GTEST_OS_FREEBSD || GTEST_OS_GNU_KFREEBSD || \
+      GTEST_OS_NETBSD
+
+#if GTEST_OS_NETBSD
+#undef KERN_PROC
+#define KERN_PROC KERN_PROC2
+#define kinfo_proc kinfo_proc2
+#endif
+
+#if GTEST_OS_DRAGONFLY
+#define KP_NLWP(kp) (kp.kp_nthreads)
+#elif GTEST_OS_FREEBSD || GTEST_OS_GNU_KFREEBSD
+#define KP_NLWP(kp) (kp.ki_numthreads)
+#elif GTEST_OS_NETBSD
+#define KP_NLWP(kp) (kp.p_nlwps)
+#endif
 
 // Returns the number of threads running in the process, or 0 to indicate that
 // we cannot detect it.
 size_t GetThreadCount() {
-    const task_t task = mach_task_self();
-    mach_msg_type_number_t thread_count;
-    thread_act_array_t thread_list;
-    const kern_return_t status = task_threads( task, &thread_list, &thread_count );
+  int mib[] = {
+    CTL_KERN,
+    KERN_PROC,
+    KERN_PROC_PID,
+    getpid(),
+#if GTEST_OS_NETBSD
+    sizeof(struct kinfo_proc),
+    1,
+#endif
+  };
+  u_int miblen = sizeof(mib) / sizeof(mib[0]);
+  struct kinfo_proc info;
+  size_t size = sizeof(info);
+  if (sysctl(mib, miblen, &info, &size, NULL, 0)) {
+    return 0;
+  }
+  return static_cast<size_t>(KP_NLWP(info));
+}
+#elif GTEST_OS_OPENBSD
 
-    if ( status == KERN_SUCCESS ) {
-        // task_threads allocates resources in thread_list and we need to free them
-        // to avoid leaks.
-        vm_deallocate( task,
-                       reinterpret_cast<vm_address_t>( thread_list ),
-                       sizeof( thread_t ) * thread_count );
-        return static_cast<size_t>( thread_count );
-    }
-    else {
-        return 0;
-    }
+// Returns the number of threads running in the process, or 0 to indicate that
+// we cannot detect it.
+size_t GetThreadCount() {
+  int mib[] = {
+    CTL_KERN,
+    KERN_PROC,
+    KERN_PROC_PID | KERN_PROC_SHOW_THREADS,
+    getpid(),
+    sizeof(struct kinfo_proc),
+    0,
+  };
+  u_int miblen = sizeof(mib) / sizeof(mib[0]);
+
+  // get number of structs
+  size_t size;
+  if (sysctl(mib, miblen, NULL, &size, NULL, 0)) {
+    return 0;
+  }
+  mib[5] = size / mib[4];
+
+  // populate array of structs
+  struct kinfo_proc info[mib[5]];
+  if (sysctl(mib, miblen, &info, &size, NULL, 0)) {
+    return 0;
+  }
+
+  // exclude empty members
+  int nthreads = 0;
+  for (size_t i = 0; i < size / mib[4]; i++) {
+    if (info[i].p_tid != -1)
+      nthreads++;
+  }
+  return nthreads;
+}
+
+#elif GTEST_OS_QNX
+
+// Returns the number of threads running in the process, or 0 to indicate that
+// we cannot detect it.
+size_t GetThreadCount() {
+  const int fd = open("/proc/self/as", O_RDONLY);
+  if (fd < 0) {
+    return 0;
+  }
+  procfs_info process_info;
+  const int status =
+      devctl(fd, DCMD_PROC_INFO, &process_info, sizeof(process_info), nullptr);
+  close(fd);
+  if (status == EOK) {
+    return static_cast<size_t>(process_info.num_threads);
+  } else {
+    return 0;
+  }
+}
+
+#elif GTEST_OS_AIX
+
+size_t GetThreadCount() {
+  struct procentry64 entry;
+  pid_t pid = getpid();
+  int status = getprocs64(&entry, sizeof(entry), nullptr, 0, &pid, 1);
+  if (status == 1) {
+    return entry.pi_thcount;
+  } else {
+    return 0;
+  }
+}
+
+#elif GTEST_OS_FUCHSIA
+
+size_t GetThreadCount() {
+  int dummy_buffer;
+  size_t avail;
+  zx_status_t status = zx_object_get_info(
+      zx_process_self(),
+      ZX_INFO_PROCESS_THREADS,
+      &dummy_buffer,
+      0,
+      nullptr,
+      &avail);
+  if (status == ZX_OK) {
+    return avail;
+  } else {
+    return 0;
+  }
 }
 
 #else
 
 size_t GetThreadCount() {
-    // There's no portable way to detect the number of threads, so we just
-    // return 0 to indicate that we cannot detect it.
-    return 0;
+  // There's no portable way to detect the number of threads, so we just
+  // return 0 to indicate that we cannot detect it.
+  return 0;
 }
 
-#endif  // GTEST_OS_MAC
+#endif  // GTEST_OS_LINUX
 
 #if GTEST_USES_POSIX_RE
 
