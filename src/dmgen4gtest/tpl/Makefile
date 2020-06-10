@@ -48,8 +48,8 @@ $(shell rm -rf build)
 $(shell mkdir -p $(DEST_DIR))
 
 all: $(DEST)
-$(shell mkdir -p $(sort $(OBJ_DIR)))
--include $(DEPS) $(DEPS2) $(DEPS3)
+	$(shell mkdir -p $(sort $(OBJ_DIR)))
+	-include $(DEPS) $(DEPS2) $(DEPS3)
 
 $(DEST): $(OBJS) $(OBJS2) $(OBJS3)
 	@echo
