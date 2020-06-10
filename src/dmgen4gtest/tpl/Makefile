@@ -16,14 +16,14 @@ INC_DIR += -Isrc -Isrc/gtest -Itest/{{PROJECT_NAME_LO}} -Iinclude
 LIB_DIR = -L/lib/$(BUILD_CONFIG_NAME)
 LIBS += -Wl,-Bdynamic -lpthread -ldl -lrt
 
-DESTDIR = ../bin/$(BUILD_CONFIG_NAME)/
+DEST_DIR = ../bin/$(BUILD_CONFIG_NAME)
 
-DESTNAME = {{PROJECT_NAME_LO}}
+DEST_NAME = {{PROJECT_NAME_LO}}
 
 OUTPUT = ../build/$(BUILD_CONFIG_NAME)/{{PROJECT_NAME_LO}}
 
 
-DEST = $(DESTDIR)/$(DESTNAME)
+DEST = $(DEST_DIR)/$(DEST_NAME)
 
 SRCS = $(shell find $(SRC_DIR) -maxdepth 1 -name "*.cpp")
 OBJS = $(patsubst %.cpp, $(OUTPUT)/%.o, $(SRCS))
@@ -45,7 +45,7 @@ LDFLAGS = $(LIB_DIR) $(LIBS)
 
 $(shell rm -f $(DEST))
 $(shell rm -rf build)
-$(shell mkdir -p $(DESTDIR))
+$(shell mkdir -p $(DEST_DIR))
 
 all: $(DEST)
 $(shell mkdir -p $(sort $(OBJ_DIR)))
@@ -91,8 +91,8 @@ $(OUTPUT)/%.d: %.cc
 	sed 's,.*\.o[ :]*,$(patsubst %.d,%.o,$@) $@ : ,g' < $@.$$$$ > $@; \
 	rm -f $@.$$$$
 
-#$(shell echo $$(svn info | grep Revision) > $(DESTDIR)/version.txt)
-#$(shell echo $$(svn info | grep "Last Changed Rev") > $(DESTDIR)/update.info)
+#$(shell echo $$(svn info | grep Revision) > $(DEST_DIR)/version.txt)
+#$(shell echo $$(svn info | grep "Last Changed Rev") > $(DEST_DIR)/update.info)
 
 clean:
 	@echo
