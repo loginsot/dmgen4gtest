@@ -16,7 +16,7 @@ INC_DIR += -Isrc -Isrc/gtest -Itest/{{PROJECT_NAME_LO}} -Iinclude
 LIB_DIR = -L/lib/$(BUILD_CONFIG_NAME)
 LIBS += -Wl,-Bdynamic -lpthread -ldl -lrt
 
-DEST_DIR = ../bin/$(BUILD_CONFIG_NAME)
+DEST_DIR = ../bin/$(BUILD_CONFIG_NAME)/
 
 DEST_NAME = {{PROJECT_NAME_LO}}
 
@@ -48,8 +48,8 @@ $(shell rm -rf build)
 $(shell mkdir -p $(DEST_DIR))
 
 all: $(DEST)
-	$(shell mkdir -p $(sort $(OBJ_DIR)))
-	-include $(DEPS) $(DEPS2) $(DEPS3)
+$(shell mkdir -p $(sort $(OBJ_DIR)))
+-include $(DEPS) $(DEPS2) $(DEPS3)
 
 $(DEST): $(OBJS) $(OBJS2) $(OBJS3)
 	@echo
