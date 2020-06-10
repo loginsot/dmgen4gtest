@@ -8248,6 +8248,8 @@ void FilePath::Normalize() {
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include <string>
+#include <fstream>
 
 #if GTEST_OS_WINDOWS_MOBILE
 # include <windows.h>  // For TerminateProcess()
@@ -8290,7 +8292,30 @@ const int kStdOutFileno = STDOUT_FILENO;
 const int kStdErrFileno = STDERR_FILENO;
 #endif  // _MSC_VER
 
-#if GTEST_OS_MAC
+#if GTEST_OS_LINUX
+
+namespace {
+template <typename T>
+T ReadProcFileField(const std::string& filename, int field) {
+  std::string dummy;
+  std::ifstream file(filename.c_str());
+  while (field-- > 0) {
+    file >> dummy;
+  }
+  T output = 0;
+  file >> output;
+  return output;
+}
+}  // namespace
+
+// Returns the number of active threads, or 0 when there is an error.
+size_t GetThreadCount() {
+  const std::string filename =
+      (Message() << "/proc/" << getpid() << "/stat").GetString();
+  return ReadProcFileField<size_t>(filename, 19);
+}
+
+#elif GTEST_OS_MAC
 
 // Returns the number of threads running in the process, or 0 to indicate that
 // we cannot detect it.

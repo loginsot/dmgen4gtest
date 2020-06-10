@@ -32,7 +32,7 @@ void {{PROJECT_NAME_LO}}_DeathTest()
         if (9999 == oRand.Generate(10000))
         {
             std::cerr << "DeathTest" << std::endl;
-            exit(-1);
+            exit(1);
         }
     }
 }
@@ -56,5 +56,5 @@ TEST_F(frame_{{PROJECT_NAME_LO}}, do_action)
 
 TEST({{PROJECT_NAME_LO}}_DeathTest, DeathTest)
 {
-    EXPECT_EXIT({{PROJECT_NAME_LO}}_DeathTest(), ::testing::ExitedWithCode(-1), "DeathTest");
+    EXPECT_EXIT({{PROJECT_NAME_LO}}_DeathTest(), ::testing::ExitedWithCode(1), "DeathTest");
 }
