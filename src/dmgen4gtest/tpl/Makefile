@@ -22,7 +22,6 @@ DEST_NAME = {{PROJECT_NAME_LO}}
 
 OUTPUT = ../build/$(BUILD_CONFIG_NAME)/{{PROJECT_NAME_LO}}
 
-
 DEST = $(DEST_DIR)/$(DEST_NAME)
 
 SRCS = $(shell find $(SRC_DIR) -maxdepth 1 -name "*.cpp")
