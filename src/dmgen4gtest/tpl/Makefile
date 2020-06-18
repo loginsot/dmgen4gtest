@@ -24,15 +24,15 @@ OUTPUT = ../build/$(BUILD_CONFIG_NAME)/{{PROJECT_NAME_LO}}
 
 DEST = $(DEST_DIR)/$(DEST_NAME)
 
-SRCS = $(shell find $(SRC_DIR) -maxdepth 1 -name "*.cpp")
+SRCS = $(shell find $(SRC_DIR) -maxdepth 2 -name "*.cpp")
 OBJS = $(patsubst %.cpp, $(OUTPUT)/%.o, $(SRCS))
 DEPS = $(patsubst %.o, %.d, $(OBJS))
 
-SRCS2 = $(shell find $(SRC_DIR) -maxdepth 1 -name "*.c")
+SRCS2 = $(shell find $(SRC_DIR) -maxdepth 2 -name "*.c")
 OBJS2 = $(patsubst %.c, $(OUTPUT)/%.o, $(SRCS2))
 DEPS2 = $(patsubst %.o, %.d, $(OBJS2))
 
-SRCS3 = $(shell find $(SRC_DIR) -maxdepth 1 -name "*.cc")
+SRCS3 = $(shell find $(SRC_DIR) -maxdepth 2 -name "*.cc")
 OBJS3 = $(patsubst %.cc, $(OUTPUT)/%.o, $(SRCS3))
 DEPS3 = $(patsubst %.o, %.d, $(OBJS3))
 
